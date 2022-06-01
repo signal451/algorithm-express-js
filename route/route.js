@@ -1,7 +1,9 @@
 const express = require('express'); 
+const { json } = require('express/lib/response');
 const mysqlCon = require('../connection/connect.js');
 const router = express.Router(); 
 const contoller = require('../controllers/callbacks.js'); 
+
 
 
 
@@ -30,7 +32,7 @@ router.get('/api/users/:userID', (req, res) => {
     }
 
     mysqlCon.query('SELECT * FROM `hereglegch` WHERE Hereglegch_id = ?', [userID], (error, results, fields) =>{
-        if(error) return res.status(404).send("Сервер дээр алдаа гарсан байна");
+        if(error) return res.status(500).send("Сервер дээр алдаа гарсан байна");
         if(results.length === 0) return res.status(404).send("Сервер дээр хүсэлтийн утга олдсонгүй");
         return res.status(200).send(JSON.stringify(results));
     });

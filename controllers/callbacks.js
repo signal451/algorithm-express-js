@@ -1,4 +1,6 @@
 const mysqlCon = require('../connection/connect.js');
+const Joi = require('joi');
+
 
 const getUsers = (req, res) => {
     mysqlCon.query('SELECT * FROM hereglegch', (error, results, fields)=>{
@@ -18,9 +20,34 @@ const getLanguages = (req, res) => {
 
 
 const userLogin = (req, res) => {
-    //validate -> user email, password 
+    //validate -> user email, password  
+    const schema = Joi.object({
+        Email:  Joi
+            .string()
+            .email({tlds: { allow: ['com'] } })
+            .required(),
+        Password: Joi
+            .string()
+            .pattern(/^[a-zA-Z0-9_-]{6,21}$/)
+            .required()
+    });
+
+    const {error, value} = schema.validate({Email: req.body.email, Password: req.body.password});
+
+    if(error) {
+        return res.status(500).send(error.details);
+    }
+
+    mysqlCon.query('CALL GetUser(?, ?)', [value.Email, value.Password], (error, results, fields) => {
+        if(error) return res.status(500).send("Сервер дээр алдаа гарсан байна");
+        if(results[0].length === 0) return res.status(404).send("Сервер дээр хүсэлтийн утга олдсонгүй");
+        console.log("USER ID: " + results[0][0].Hereglegch_id);   
+        return res.status(200).send("success");
+    });
+
     
-    mysqlCon.query() 
+
+   
 }
 
 const userRegister = (req, res) => {

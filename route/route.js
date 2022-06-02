@@ -3,6 +3,8 @@ const { json } = require('express/lib/response');
 const mysqlCon = require('../connection/connect.js');
 const router = express.Router(); 
 const contoller = require('../controllers/callbacks.js'); 
+const OAuth = require('../Authentication/OAuth.js');
+
 
 
 
@@ -14,17 +16,13 @@ const contoller = require('../controllers/callbacks.js');
 //     });
 // }
 
-router.get('/api/users', contoller.getUsers);
+router.get('/api/users', OAuth, contoller.getUsers);
 
-router.post('/api/login', contoller.userLogin);
+router.post('/api/login',contoller.userLogin);
 
 
 
 router.get('/api/users/:userID', (req, res) => {
-    // validate input 
-    // -> can't be empty
-    // -> must be int 
-    // -> if that user empty send not found message. 
     let userID = parseInt(req.params.userID, 10);
     if(isNaN(userID)) {
         res.status(400).send("Хүсэлт алдаатай байна");

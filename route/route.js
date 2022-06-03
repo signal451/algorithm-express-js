@@ -18,7 +18,7 @@ const OAuth = require('../Authentication/OAuth.js');
 
 router.get('/api/users', OAuth, contoller.getUsers);
 
-router.post('/api/login',contoller.userLogin);
+router.post('/api/login', contoller.userLogin);
 
 
 
@@ -37,13 +37,16 @@ router.get('/api/users/:userID', (req, res) => {
 });
 
 
-router.post('/api/users', (req, res) => {
+router.post('/api/register', contoller.userRegister);   
+
+
+// router.post('/api/users', (req, res) => {
   
     // mysqlCon.query('', (error, results, fields) => {
     //     if(error) res.status(404).send("Something went wrong in server");
     //     res.status(200).send(JSON.stringify(results));
     // }) 
-});
+// });
 
 
 
